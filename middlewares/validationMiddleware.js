@@ -65,8 +65,97 @@ const validateExpertUpload = [
   }),
 ];
 
+const validateTutorUpload = [
+  body("title")
+    .isString()
+    .withMessage("Judul harus berupa string!")
+    .notEmpty()
+    .withMessage("Judul tidak boleh kosong!"),
+
+  body("description")
+    .isString()
+    .withMessage("Deskripsi harus berupa string!")
+    .notEmpty()
+    .withMessage("Deskripsi tidak boleh kosong!"),
+
+  body("jadwal")
+    .isString()
+    .withMessage("Jadwal harus berupa string!")
+    .notEmpty()
+    .withMessage("Jadwal tidak boleh kosong!"),
+
+  body("price")
+    .isNumeric()
+    .withMessage("Harga harus berupa angka!")
+    .notEmpty()
+    .withMessage("Harga tidak boleh kosong!"),
+
+  body("expert")
+    .isMongoId()
+    .withMessage("Expert ID harus berupa ID MongoDB yang valid!")
+    .notEmpty()
+    .withMessage("Expert ID tidak boleh kosong!"),
+
+  body("category")
+    .isMongoId()
+    .withMessage("Category ID harus berupa ID MongoDB yang valid!")
+    .notEmpty()
+    .withMessage("Category ID tidak boleh kosong!"),
+
+  body("facilities")
+    .optional() // fasilitas bisa kosong
+    .isArray()
+    .withMessage("Fasilitas harus berupa array string!")
+    .custom((facilities) => {
+      return facilities.every((facility) => typeof facility === "string");
+    })
+    .withMessage("Setiap fasilitas harus berupa string!"),
+];
+
+const validateDiscussionUpload = [
+  body("title")
+    .isString()
+    .withMessage("Judul harus berupa string!")
+    .notEmpty()
+    .withMessage("Judul tidak boleh kosong!"),
+
+  body("description")
+    .isString()
+    .withMessage("Deskripsi harus berupa string!")
+    .notEmpty()
+    .withMessage("Deskripsi tidak boleh kosong!"),
+
+  body("category")
+    .isMongoId()
+    .withMessage("Category ID harus berupa ID MongoDB yang valid!")
+    .notEmpty()
+    .withMessage("Category ID tidak boleh kosong!"),
+
+  body("image").custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error("File gambar tidak boleh kosong!");
+    }
+    // Check file type
+    const allowedExtensions = /jpeg|jpg|png/;
+    const extension = req.file.mimetype.split("/")[1];
+    if (!allowedExtensions.test(extension)) {
+      throw new Error(
+        "Format file tidak valid! Hanya gambar jpeg, jpg, dan png yang diperbolehkan."
+      );
+    }
+    return true;
+  }),
+];
+
+const validateMessage = [
+  body("content").notEmpty().withMessage("Pesan tidak boleh kosong"),
+];
+
 module.exports = {
   validateCategory,
   validateRegister,
-  validateExpertUpload
+  validateExpertUpload,
+  validateTutorUpload,
+  validateDiscussionUpload,
+  validateMessage,
 };

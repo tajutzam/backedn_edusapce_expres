@@ -1,17 +1,24 @@
 const mongoose = require("mongoose");
 
-const Expert = require("./expertModel");
-const Category = require("./categoryModel");
-
 const tutorSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
       trim: true,
     },
-    bio: {
+    description: {
       type: String,
+      required: true,
+      trim: true,
+    },
+    jadwal: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    price: {
+      type: Number,
       required: true,
       trim: true,
     },
@@ -30,6 +37,12 @@ const tutorSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    facilities: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
   },
   { timestamps: true }
 );

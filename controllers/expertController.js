@@ -37,7 +37,7 @@ const updateExpert = async (req, res) => {
       id,
       {
         name,
-        image: imagePath ? `/uploads/${imagePath}` : undefined, // Update image if provided
+        image: imagePath ? `/uploads/${imagePath}` : undefined,
         specialization,
       },
       { new: true, runValidators: true }
@@ -83,7 +83,7 @@ const getExpertById = async (req, res) => {
     if (!expert) {
       return res.status(404).json({ message: "Expert not found" });
     }
-    res.status(200).json(expert);
+    res.status(200).json({ data: expert, message: "success get expert" });
   } catch (error) {
     res.status(500).json({ message: "Error fetching expert", error });
   }
