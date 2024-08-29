@@ -1,5 +1,5 @@
 const express = require("express");
-const discussionController = require("../controllers/diskusiController");
+const discussionController = require("../controllers/discussionController");
 const upload = require("../config/upload");
 
 const { authenticateToken } = require("../middlewares/authMiddleware");
@@ -43,5 +43,7 @@ router.post(
   handleValidationErrors,
   discussionController.sendMessage
 );
+
+router.delete("/:id", authenticateToken, discussionController.deleteDiscussion);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const Tutor = require("../models/tutorModel");
+const Category = require("../models/categoryModel");
+
 const path = require("path");
 
 const createTutor = async (req, res) => {
@@ -70,7 +72,6 @@ const updateTutor = async (req, res) => {
   }
 };
 
-// Get all tutors
 const getAllTutors = async (req, res) => {
   try {
     const tutors = await Tutor.find().populate("expert").populate("category");
@@ -79,6 +80,36 @@ const getAllTutors = async (req, res) => {
       .json({ data: tutors, message: "success fetch data tutors" });
   } catch (error) {
     res.status(500).json({ message: "Error fetching tutors", error });
+  }
+};
+
+const getTutorByCategory = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+
+    const category = Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const tutors = await Tutor.find({ category: categoryId })
+      .populate("expert")
+      .populate("category");
+
+    if (!tutors.length) {
+      return res
+        .status(404)
+        .json({ message: "No tutors found in this category" });
+    }
+
+    res
+      .status(200)
+      .json({ data: tutors, message: "Success fetching tutors by category" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching tutors by category", error });
   }
 };
 
@@ -118,4 +149,5 @@ module.exports = {
   createTutor,
   deleteTutor,
   updateTutor,
+  getTutorByCategory,
 };

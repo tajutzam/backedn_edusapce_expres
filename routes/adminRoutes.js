@@ -4,6 +4,14 @@ const userRouter = require("./userRoutes");
 const categoryRouter = require("./categoryRoutes");
 const expertRouter = require("./expertRoutes");
 const tutorRouter = require("./tutorRoutes");
+const {
+  validateStatusTransaction,
+} = require("../middlewares/validationMiddleware");
+const {
+  handleValidationErrors,
+} = require("../middlewares/handleValidationError");
+
+const transactionController = require("../controllers/transactionController");
 
 const adminMiddleware = require("../middlewares/authMiddleware");
 router.use(adminMiddleware.authenticateToken);
@@ -12,5 +20,12 @@ router.use("/user", userRouter);
 router.use("/category", categoryRouter);
 router.use("/expert", expertRouter);
 router.use("/tutor", tutorRouter);
+router.get("/transactions", transactionController.getTransactionsByStatus);
+router.put(
+  "/transactions",
+  validateStatusTransaction,
+  handleValidationErrors,
+  transactionController.validatePurchase
+);
 
 module.exports = router;

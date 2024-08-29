@@ -122,10 +122,25 @@ const sendMessage = async (req, res) => {
   }
 };
 
+const deleteDiscussion = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const discussion = await Discussion.findByIdAndDelete(id);
+    if (!discussion) {
+      return res.status(404).json({ message: "Diskusi tidak ditemukan" });
+    }
+    return res.status(200).json({ message: "Diskusi berhasil dihapus" });
+  } catch (error) {
+    return res.status(404).json({ message: "Diskusi tidak ditemukan" });
+  }
+};
+
 module.exports = {
   createDiscussion,
   getAllDiscussions,
   getDiscussionById,
   joinDiscussion,
   sendMessage,
+  deleteDiscussion,
 };

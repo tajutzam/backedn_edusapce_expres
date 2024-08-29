@@ -147,8 +147,45 @@ const validateDiscussionUpload = [
   }),
 ];
 
+const validateBuyTutor = [
+  body("tutorId")
+    .isMongoId()
+    .withMessage("tutor id tidak valid")
+    .notEmpty()
+    .withMessage("tutor tidak boleh kosong"),
+  body("image").custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error("File bukti pembayaran tidak boleh kosong!");
+    }
+    const allowedExtensions = /jpeg|jpg|png/;
+    const extension = req.file.mimetype.split("/")[1];
+    if (!allowedExtensions.test(extension)) {
+      throw new Error(
+        "Format file tidak valid! Hanya gambar jpeg, jpg, dan png yang diperbolehkan."
+      );
+    }
+    return true;
+  }),
+];
+
 const validateMessage = [
   body("content").notEmpty().withMessage("Pesan tidak boleh kosong"),
+];
+
+const validateStatusTransaction = [
+  body("id")
+    .isMongoId()
+    .withMessage("id yang diberikan tidak valid!")
+    .notEmpty()
+    .withMessage("Id tidak boleh kosong"),
+
+  body("status")
+    .isIn(["accept", "rejected", "pending"])
+    .withMessage(
+      'Status harus salah satu dari: "accept", "rejected", atau "pending"'
+    )
+    .notEmpty()
+    .withMessage("Status tidak boleh kosong"),
 ];
 
 module.exports = {
@@ -158,4 +195,6 @@ module.exports = {
   validateTutorUpload,
   validateDiscussionUpload,
   validateMessage,
+  validateBuyTutor,
+  validateStatusTransaction,
 };
